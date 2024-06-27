@@ -1,3 +1,6 @@
+/*
+SFP_myJSON参数需从已有流程字段属性设置中抓取，可通过查看网络请求的方式进行抓取
+示例：
 let myJSON = `{
     "workflowid":"71025",
     "nodeid": 109529,
@@ -16,5 +19,16 @@ let myJSON = `{
     "linkageid": 117552,
     "wfTestStr":  ""
     }`;
-let postObj = JSON.parse(myJSON);
-$.post("/api/workflow/linkage/reqFieldSqlResult", postObj);
+*/
+/*
+这是个异步函数，返回结果为promise，调用时需要加await前缀，以实现同步，即await selectByFieldProp(myJSON)
+*/
+async function selectByFieldPropSyn(SFP_myJSON) {
+    try {
+        let postObj = JSON.parse(SFP_myJSON);
+        const response = await $.post("/api/workflow/linkage/reqFieldSqlResult", postObj);
+        return response;
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
