@@ -22,4 +22,5 @@ function ArabicToChinese(Arabic_numerals) {
         const chineseNumerals = ["零", "一", "二", "三", "四", "五", "六", "七", "八", "九"];
         return chineseNumerals[parseInt(match)];
     });
+    return mixNumerals;
 }
