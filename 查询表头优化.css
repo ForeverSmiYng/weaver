@@ -12,6 +12,10 @@
 查询表头自动换行
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 */
+.react-resizable .ant-table-column-sorter.text-elli {
+    white-space: pre-wrap;
+}
+
 .react-resizable .ant-table-column-sorterN.text-elli {
     white-space: pre-wrap;
 }
