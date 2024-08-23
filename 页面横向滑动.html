@@ -1,0 +1,221 @@
+<script src="/myJavaScript/anime.min.js">
+</script>
+<script>
+    /*
+    每一步内容都必须存放在一个标签页，标签页横向排列，标签页前后各空出一列
+    每个标签都要在默认的style属性上设置为opacity:0，以默认隐藏步骤内容
+    每个步骤的内容默认隐藏
+    方法参数为对象：{curStepFieldId:"field216855",cols:4,vars:[{tab:"tab1",cnt:"cnt1",top:1},{tab:"tab2",cnt:"cnt2",top:0}],els:["title","identifier"]}
+    curStepFieldId为当前步骤字段id
+    cols为表格有效范围内的列数
+    vars为每个步骤对应的一组参数，vars参数组顺序与标签页DOM节点顺序一致
+    其中第一组参数代表意思为：tab1为标签页class，cnt1为步骤一页面的全部内容，1表示隐藏标签页顶部标签(0表示不隐藏)
+    els为其他需要在方法中将display属性还原的单元格class
+
+    注意：
+    这个方法需要结合以下CSS样式使用，以解决明细表头的问题
+    .excelDetailFixedHead {
+        position: sticky !important;
+        top: 0px !important;
+    }
+    */
+    function pageLateralSlider(obj) {
+        document.getElementsByClassName("wf-req-top-button")[0].parentNode.parentNode.id = "submitBtn";
+        $("#submitBtn").css("cssText", "display:none !important;");
+        const steps = obj.vars.length;
+        //基础判断
+        if (obj.cols !== steps + 2) {
+            console.log("cols数量与vars参数组数量矛盾");
+            return;
+        }
+        let myIntv = setInterval(() => {
+            //页面元素加载判断
+            for (let i = 0; i < steps; i++) {
+                if ($("." + obj.vars[i].tab).length === 0 || $("." + obj.vars[i].cnt).length === 0) {
+                    return;
+                }
+            }
+            for (let i = 0; i < obj.els.length; i++) {
+                if ($("." + obj.els[i]).length === 0) {
+                    return;
+                }
+            }
+            if ($(".tab_top").length !== steps) {
+                return;
+            }
+            if ($("#buttonCell").length === 0) {
+                return;
+            }
+            if ($(".excelMainTable>colgroup col").length !== obj.cols) {
+                return;
+            }
+            if ($(".wf-req-form").length === 0) {
+                return;
+            }
+            if ($(".wf-req-top-button").length === 0) {
+                return;
+            }
+            clearInterval(myIntv);
+            //自适应列宽            
+            const screen_width = $(".wf-req-form")[0].offsetWidth;
+            const padding_width = Math.floor(0.02 * screen_width);
+            const content_width = screen_width - 2 * padding_width;
+            $(".excelMainTable>colgroup col")[0].style.width = `${padding_width}px`;
+            $(".excelMainTable>colgroup col")[obj.cols - 1].style.width = `${padding_width}px`;
+            for (let i = 1; i <= steps; i++) {
+                $(".excelMainTable>colgroup col")[i].style.width = `${content_width}px`;
+            }
+            //隐藏标签页顶部标签
+            obj.vars.forEach((e, index) => {
+                if (e.top === 1) {
+                    $(".tab_top")[index].style.display = "none";
+                }
+            });
+            //显示其他需要还原display属性的单元格
+            obj.els.forEach(e => {
+                $("." + e).css("display", "");
+            });
+            //显示当前步骤内容
+            var curStepVar = + WfForm.getFieldValue(obj.curStepFieldId);
+            if (curStepVar === 0) {
+                $("." + obj.vars[curStepVar].cnt).css("display", "");
+                $("." + obj.vars[curStepVar].tab).css("opacity", "1");
+            } else {
+                let distance_0 = -curStepVar * content_width;
+                obj.vars.forEach(e => {
+                    anime({
+                        targets: '.' + e.tab + '_swap',
+                        translateX: distance_0,
+                        duration: 0,
+                        easing: 'easeInOutQuad',
+                    });
+                });
+                $("." + obj.vars[curStepVar].cnt).css("display", "");
+                $("." + obj.vars[curStepVar].tab).css("opacity", "1");
+            }
+            //核心功能        
+            $("#buttonCell").append("<span class='ant-btn preStep' style='display:none;'>上一步</span><span class='step-blank' style='display:none;'>&emsp;&emsp;</span><span class='ant-btn nexStep' style='display:none;'>下一步</span>");
+            if (curStepVar === 0) {
+                $(".preStep").css({ "display": "none" });
+                $(".step-blank").css({ "display": "none" });
+                $(".nexStep").css({ "display": "inline" });
+                $("#submitBtn").css("cssText", "display:none !important;");
+            } else if (curStepVar === steps - 1) {
+                $(".preStep").css({ "display": "inline" });
+                $(".step-blank").css({ "display": "none" });
+                $(".nexStep").css({ "display": "none" });
+                $("#submitBtn").css("cssText", "display:inline-block !important;");
+            } else {
+                $(".preStep").css({ "display": "inline" });
+                $(".step-blank").css({ "display": "inline" });
+                $(".nexStep").css({ "display": "inline" });
+                $("#submitBtn").css("cssText", "display:none !important;");
+            }
+            //点击事件
+            var click_judg = 0;
+            $(".nexStep").click(() => {
+                if (click_judg === 0) {
+                    click_judg++;
+                    curStepVar++;
+                    obj.vars.forEach((e, index) => {
+                        if (index !== curStepVar) {
+                            anime({
+                                targets: '.' + e.tab + '_swap',
+                                translateX: - curStepVar * content_width,
+                                opacity: 0,
+                                duration: 500,
+                                easing: 'easeInOutQuad',
+                            });
+                        }
+                    });
+                    $("." + obj.vars[curStepVar].cnt).css("display", "");
+                    $("." + obj.vars[curStepVar].tab).css("opacity", '1');
+                    anime({
+                        targets: '.' + obj.vars[curStepVar].tab + '_swap',
+                        translateX: - curStepVar * content_width,
+                        opacity: [0, 1],
+                        duration: 500,
+                        easing: 'easeInOutQuad'
+                    });
+                    $("." + obj.vars[curStepVar - 1].cnt).css("display", "none");
+                    if (curStepVar === 0) {
+                        $(".preStep").css({ "display": "none" });
+                        $(".step-blank").css({ "display": "none" });
+                        $(".nexStep").css({ "display": "inline" });
+                        $("#submitBtn").css("cssText", "display:none !important;");
+                    } else if (curStepVar === steps - 1) {
+                        $(".preStep").css({ "display": "inline" });
+                        $(".step-blank").css({ "display": "none" });
+                        $(".nexStep").css({ "display": "none" });
+                        $("#submitBtn").css("cssText", "display:inline-block !important;");
+                    } else {
+                        $(".preStep").css({ "display": "inline" });
+                        $(".step-blank").css({ "display": "inline" });
+                        $(".nexStep").css({ "display": "inline" });
+                        $("#submitBtn").css("cssText", "display:none !important;");
+                    }
+                    WfForm.changeFieldValue(obj.curStepFieldId, { value: curStepVar });
+                    click_judg--;
+                }
+            });
+            $(".preStep").click(() => {
+                if (click_judg === 0) {
+                    click_judg++;
+                    curStepVar--;
+                    obj.vars.forEach((e, index) => {
+                        if (index !== curStepVar) {
+                            anime({
+                                targets: '.' + e.tab + '_swap',
+                                translateX: - curStepVar * content_width,
+                                opacity: 0,
+                                duration: 500,
+                                easing: 'easeInOutQuad',
+                            });
+                        }
+                    });
+                    $("." + obj.vars[curStepVar].cnt).css("display", "");
+                    $("." + obj.vars[curStepVar].tab).css("opacity", '1');
+                    anime({
+                        targets: '.' + obj.vars[curStepVar].tab + '_swap',
+                        translateX: - curStepVar * content_width,
+                        opacity: [0, 1],
+                        duration: 500,
+                        easing: 'easeInOutQuad'
+                    });
+                    $("." + obj.vars[curStepVar + 1].cnt).css("display", "none");
+                    if (curStepVar === 0) {
+                        $(".preStep").css({ "display": "none" });
+                        $(".step-blank").css({ "display": "none" });
+                        $(".nexStep").css({ "display": "inline" });
+                        $("#submitBtn").css("cssText", "display:none !important;");
+                    } else if (curStepVar === steps - 1) {
+                        $(".preStep").css({ "display": "inline" });
+                        $(".step-blank").css({ "display": "none" });
+                        $(".nexStep").css({ "display": "none" });
+                        $("#submitBtn").css("cssText", "display:inline-block !important;");
+                    } else {
+                        $(".preStep").css({ "display": "inline" });
+                        $(".step-blank").css({ "display": "inline" });
+                        $(".nexStep").css({ "display": "inline" });
+                        $("#submitBtn").css("cssText", "display:none !important;");
+                    }
+                    WfForm.changeFieldValue(obj.curStepFieldId, { value: curStepVar });
+                    click_judg--;
+                }
+            });
+        }, 100);
+    }
+</script>
+
+<style>
+    /*隐藏提交按钮*/
+    .ant-col-xs-18>div>span:nth-of-type(1) {
+        display: none !important;
+    }
+
+    /*修复明细浮动表头问题*/
+    .excelDetailFixedHead {
+        position: sticky !important;
+        top: 0px !important;
+    }
+</style>
