@@ -7,3 +7,7 @@
 星星评价演示：
 
 ![星星评价演示](https://raw.githubusercontent.com/ForeverSmiYng/Ecology_9_Kit/main/%E6%95%88%E6%9E%9C%E6%BC%94%E7%A4%BA/%E6%98%9F%E6%98%9F%E8%AF%84%E4%BB%B7%E6%BC%94%E7%A4%BA.gif)
+
+emoji评价演示：
+
+![emoji评价演示](https://raw.githubusercontent.com/ForeverSmiYng/weaver/main/%E6%95%88%E6%9E%9C%E6%BC%94%E7%A4%BA/emoji%E8%AF%84%E4%BB%B7%E6%BC%94%E7%A4%BA.gif)
