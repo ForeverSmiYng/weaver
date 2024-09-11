@@ -37,23 +37,22 @@ function emojiRating(dom_id, fieldid, fieldValue, noChoose, text_arr, size, just
   .${dom_id}_rating:not(:checked) > label > svg {
     fill: #fff; /* Set default color for SVG */
     transition: fill 0.3s ease; /* Add a transition effect */
+    opacity: 0.3;
   }
   
-  .${dom_id}_rating > input:checked + label:hover svg,
-  .${dom_id}_rating > input:checked + label:hover ~ label svg,
-  .${dom_id}_rating > input:checked ~ label:hover svg,
-  .${dom_id}_rating > input:checked ~ label:hover ~ label svg,
-  .${dom_id}_rating > label:hover ~ input:checked ~ label svg {
+  .${dom_id}_rating > input:checked + label:hover svg {
     fill: #e58e09;
+    opacity: 1;
   }
   
-  .${dom_id}_rating:not(:checked) > label:hover svg,
-  .${dom_id}_rating:not(:checked) > label:hover ~ label svg {
+  .${dom_id}_rating:not(:checked) > label:hover svg {
     fill: #ff9e0b;
+    opacity: 1;
   }
   
-  .${dom_id}_rating > input:checked ~ label > svg {
+  .${dom_id}_rating > input:checked + label > svg {
     fill: #fcea2b; /* Set color for selected stars */
+    opacity: 1;
   }
   
   .${dom_id}_rating {
