@@ -40,10 +40,22 @@ els为其他需要在方法中将display属性还原的单元格class
     position: sticky !important;
     top: 0px !important;
 }
+(3)结合以下CSS样式，以解决提交按钮闪烁问题，前提是要把提交按钮放在快捷按钮的第一位
+.ant-col-xs-18>div>span:nth-of-type(1):not(.wea-new-top-req-drop-btn) {
+    display: none !important;
+  }
 */
 function pageLateralSlider(sld_obj) {
-    document.getElementsByClassName("wf-req-top-button")[0].parentNode.parentNode.id = "submitBtn";
-    $("#submitBtn").css("cssText", "display:none !important;");
+    Object.assign(sld_obj, {
+        currentnode: true,
+    });
+    if (WfForm.getGlobalStore().commonParam.currentnodeid != WfForm.getGlobalStore().commonParam.nodeid) {
+        sld_obj.currentnode = false;
+    }
+    if (sld_obj.currentnode == true) {
+        document.getElementsByClassName("wf-req-top-button")[0].parentNode.parentNode.id = "submitBtn";
+        $("#submitBtn").css("cssText", "display:none !important;");
+    }
     var steps = sld_obj.vars.length;
     let myIntv1 = setInterval(() => {
         //页面元素加载判断
@@ -69,7 +81,7 @@ function pageLateralSlider(sld_obj) {
         if ($(".wf-req-form").length === 0) {
             return;
         }
-        if ($(".wf-req-top-button").length === 0) {
+        if ($(".wf-req-top-button").length === 0 && sld_obj.currentnode == true) {
             return;
         }
         clearInterval(myIntv1);
@@ -106,7 +118,9 @@ function pageLateralSlider(sld_obj) {
         $(".preStep").css({ "display": "none" });
         $(".step-blank").css({ "display": "none" });
         $(".nexStep").css({ "display": "inline" });
-        $("#submitBtn").css("cssText", "display:none !important;");
+        if (sld_obj.currentnode == true) {
+            $("#submitBtn").css("cssText", "display:none !important;");
+        }
         if (curStepVar > 0) {
             for (let i = 0; i < curStepVar; i++) {
                 if (i === 0) {
@@ -120,7 +134,6 @@ function pageLateralSlider(sld_obj) {
         }
     }, 100);
 }
-
 function initialization(init_obj) {
     //设置列宽
     let useful_cols = [];
@@ -141,7 +154,6 @@ function initialization(init_obj) {
         }
     });
 }
-
 function pageLateralSliderClick(clc_obj) {
     var clc_content_width = clc_obj.content_width;
     $(".nexStep").off("click");
@@ -187,17 +199,23 @@ function pageLateralSliderClick(clc_obj) {
                 $(".preStep").css({ "display": "none" });
                 $(".step-blank").css({ "display": "none" });
                 $(".nexStep").css({ "display": "inline" });
-                $("#submitBtn").css("cssText", "display:none !important;");
+                if (clc_obj.currentnode == true) {
+                    $("#submitBtn").css("cssText", "display:none !important;");
+                }
             } else if (clc_obj.curStep === clc_obj.vars.length - 1) {
                 $(".preStep").css({ "display": "inline" });
                 $(".step-blank").css({ "display": "none" });
                 $(".nexStep").css({ "display": "none" });
-                $("#submitBtn").css("cssText", "display:inline-block !important;");
+                if (clc_obj.currentnode == true) {
+                    $("#submitBtn").css("cssText", "display:inline-block !important;");
+                }
             } else {
                 $(".preStep").css({ "display": "inline" });
                 $(".step-blank").css({ "display": "inline" });
                 $(".nexStep").css({ "display": "inline" });
-                $("#submitBtn").css("cssText", "display:none !important;");
+                if (clc_obj.currentnode == true) {
+                    $("#submitBtn").css("cssText", "display:none !important;");
+                }
             }
             WfForm.changeFieldValue(clc_obj.curStepFieldId, { value: clc_obj.curStep });
             click_judg--;
@@ -240,24 +258,29 @@ function pageLateralSliderClick(clc_obj) {
                 $(".preStep").css({ "display": "none" });
                 $(".step-blank").css({ "display": "none" });
                 $(".nexStep").css({ "display": "inline" });
-                $("#submitBtn").css("cssText", "display:none !important;");
+                if (clc_obj.currentnode == true) {
+                    $("#submitBtn").css("cssText", "display:none !important;");
+                }
             } else if (clc_obj.curStep === clc_obj.vars.length - 1) {
                 $(".preStep").css({ "display": "inline" });
                 $(".step-blank").css({ "display": "none" });
                 $(".nexStep").css({ "display": "none" });
-                $("#submitBtn").css("cssText", "display:inline-block !important;");
+                if (clc_obj.currentnode == true) {
+                    $("#submitBtn").css("cssText", "display:inline-block !important;");
+                }
             } else {
                 $(".preStep").css({ "display": "inline" });
                 $(".step-blank").css({ "display": "inline" });
                 $(".nexStep").css({ "display": "inline" });
-                $("#submitBtn").css("cssText", "display:none !important;");
+                if (clc_obj.currentnode == true) {
+                    $("#submitBtn").css("cssText", "display:none !important;");
+                }
             }
             WfForm.changeFieldValue(clc_obj.curStepFieldId, { value: clc_obj.curStep });
             click_judg--;
         }
     });
 }
-
 function showEmptyRequiredField(serf_obj) {
     let serf_arr = serf_obj.vars[serf_obj.curStep].tab_required_info;
     for (let e of serf_arr) {
@@ -307,7 +330,6 @@ function showEmptyRequiredField(serf_obj) {
     }
     return true;
 }
-
 function showPrompt(SP_fieldid, SP_content, SP_tabid, SP_rowIndex) {//添加提示,SP_rowIndex选填；如要填SP_rowIndex，SP_tabid必填，可填null
     if (SP_rowIndex === null || SP_rowIndex === undefined) {
         $(`.myprom_${SP_fieldid}`).remove();
@@ -321,7 +343,6 @@ function showPrompt(SP_fieldid, SP_content, SP_tabid, SP_rowIndex) {//添加提�
         }
     }
 }
-
 function eraseFieldPrompt(EFP_fieldid, EFP_rowIndex) {//移除提示,SP_rowIndex选填
     if (EFP_rowIndex === null || EFP_rowIndex === undefined) {
         $(`.myprom_${EFP_fieldid}`).remove();
@@ -329,7 +350,6 @@ function eraseFieldPrompt(EFP_fieldid, EFP_rowIndex) {//移除提示,SP_rowIndex
         $(`.myprom_${EFP_fieldid}_${EFP_rowIndex}`).remove();
     }
 }
-
 function checkPrompt() {//提交前判断，先做一次if ($(".myprom").length > 0) {}判断，true则触发该方法，并禁断提交，false不执行
     let tab_id = $(".myprom")[0].getAttribute("data_tab_id");
     if (tab_id === "null" || tab_id === "undefined") {
