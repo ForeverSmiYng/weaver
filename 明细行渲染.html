@@ -1,0 +1,64 @@
+<script type="text/javascript">
+    /*
+    * 代码中调用了泛微的新增明细行的钩子事件，适用时注意替换明细表编号
+    * 代码中的 “ wf-detail-0 ” 是明细 1 的class。
+    * 如需要行渲染的明细表为明细2，需将 “ wf-detail-0 ” 替换为 “ wf-detail-1 ”。
+    * 其他明细表以此类推。
+    */
+    //增加行渲染效果
+    let myTimeout;
+    WfForm.registerAction(WfForm.ACTION_ADDROW + "1", function (index) {
+        clearTimeout(myTimeout);
+        myTimeout = setTimeout(() => {
+            $(".wf-detail-0 .excelDetailContent tbody tr.detail_data_row").off('click');
+            $(".wf-detail-0 .excelDetailContent tbody tr.detail_data_row").off('dblclick');
+            $(".wf-detail-0 .excelDetailContent tbody tr.detail_data_row").click(event => {
+                if (event.ctrlKey) {
+                    if ($(event.currentTarget).hasClass("myChooseRow")) {
+                        $(event.currentTarget).removeClass("myChooseRow");
+                    } else {
+                        $(event.currentTarget).addClass("myChooseRow");
+                    }
+                }
+            });
+            $(".wf-detail-0 .excelDetailContent tbody tr.detail_data_row").dblclick(event => {
+                if ($(event.currentTarget).hasClass("myChooseRow")) {
+                    $(event.currentTarget).removeClass("myChooseRow");
+                } else {
+                    $(event.currentTarget).addClass("myChooseRow");
+                }
+            });
+        }, 300);
+    });
+    $(".wf-detail-0 .excelDetailContent tbody tr.detail_data_row").click(event => {
+        if (event.ctrlKey) {
+            if ($(event.currentTarget).hasClass("myChooseRow")) {
+                $(event.currentTarget).removeClass("myChooseRow");
+            } else {
+                $(event.currentTarget).addClass("myChooseRow");
+            }
+        }
+    });
+    $(".wf-detail-0 .excelDetailContent tbody tr.detail_data_row").dblclick(event => {
+        if ($(event.currentTarget).hasClass("myChooseRow")) {
+            $(event.currentTarget).removeClass("myChooseRow");
+        } else {
+            $(event.currentTarget).addClass("myChooseRow");
+        }
+    });
+</script>
+
+<style type="text/css">
+    .wf-detail-0 .excelDetailContent tbody tr.detail_data_row:hover {
+        box-shadow:
+            0px 0px 0.3px rgba(0, 0, 0, 0.155),
+            0px 0px 0.9px rgba(0, 0, 0, 0.222),
+            0px 0px 1.8px rgba(0, 0, 0, 0.278),
+            0px 0px 3.7px rgba(0, 0, 0, 0.345),
+            0px 0px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .wf-detail-0 .excelDetailContent tbody tr.detail_data_row.myChooseRow {
+        background-color: bisque;
+    }
+</style>
