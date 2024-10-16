@@ -1,5 +1,9 @@
 这里会不定期发布一些泛微E9的自研功能代码
 
+阿拉伯数字转中文演示：
+
+![阿拉伯数字转中文演示](https://raw.githubusercontent.com/ForeverSmiYng/weaver/refs/heads/main/%E6%95%88%E6%9E%9C%E6%BC%94%E7%A4%BA/%E9%98%BF%E6%8B%89%E4%BC%AF%E6%95%B0%E5%AD%97%E8%BD%AC%E4%B8%AD%E6%96%87%E6%BC%94%E7%A4%BA.gif)
+
 页面横向滑动演示：
 
 ![页面横向滑动演示](https://raw.githubusercontent.com/ForeverSmiYng/weaver/refs/heads/main/%E6%95%88%E6%9E%9C%E6%BC%94%E7%A4%BA/%E9%A1%B5%E9%9D%A2%E6%A8%AA%E5%90%91%E6%BB%91%E5%8A%A8%E6%BC%94%E7%A4%BA.gif)
