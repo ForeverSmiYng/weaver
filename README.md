@@ -11,3 +11,11 @@
 emoji评价演示：
 
 ![emoji评价演示](https://raw.githubusercontent.com/ForeverSmiYng/weaver/main/%E6%95%88%E6%9E%9C%E6%BC%94%E7%A4%BA/emoji%E8%AF%84%E4%BB%B7%E6%BC%94%E7%A4%BA.gif)
+
+明细行渲染演示：
+
+![明细行渲染演示](https://raw.githubusercontent.com/ForeverSmiYng/weaver/refs/heads/main/%E6%95%88%E6%9E%9C%E6%BC%94%E7%A4%BA/%E6%98%8E%E7%BB%86%E8%A1%8C%E6%B8%B2%E6%9F%93%E6%BC%94%E7%A4%BA.gif)
+
+明细行筛选演示：
+
+![明细行筛选演示](https://raw.githubusercontent.com/ForeverSmiYng/weaver/refs/heads/main/%E6%95%88%E6%9E%9C%E6%BC%94%E7%A4%BA/%E6%98%8E%E7%BB%86%E8%A1%8C%E7%AD%9B%E9%80%89%E6%BC%94%E7%A4%BA.gif)
