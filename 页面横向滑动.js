@@ -19,7 +19,7 @@
             {
                 tabid: 5,
                 main_feild: [xqlx_FI, cdfj_FI, ssbk_FI, glbm_FI, syjg_FI, sybm_FI, aim_FI],
-                det_field: [],
+                det_field: [{ det_id: 1, noEmpty: true, det_name: "节点信息明细", field_id: [jdxh_dt1_FI, jdmc_dt1_FI, jdczz_dt1_FI, sm_dt1_FI] }],
             }
         ],
     }],
@@ -40,21 +40,22 @@ els为其他需要在方法中将display属性还原的单元格class
     position: sticky !important;
     top: 0px !important;
 }
-(3)结合以下CSS样式，以解决提交按钮闪烁问题，前提是要把提交按钮放在快捷按钮的第一位
+(3)结合以下CSS样式，以解决提交按钮问题，前提是要把提交按钮放在快捷按钮的第一位
 .ant-col-xs-18>div>span:nth-of-type(1):not(.wea-new-top-req-drop-btn) {
     display: none !important;
-  }
+    margin-left: 10px;
+}
+
+.ant-menu-vertical>.ant-menu-item:nth-of-type(1) {
+    display: none !important;
+}
 */
 function pageLateralSlider(sld_obj) {
     Object.assign(sld_obj, {
         currentnode: true,
     });
-    if (WfForm.getGlobalStore().commonParam.currentnodeid != WfForm.getGlobalStore().commonParam.nodeid) {
+    if (WfForm.getGlobalStore().commonParam.currentnodeid != WfForm.getGlobalStore().commonParam.nodeid && WfForm.getGlobalStore().commonParam.currentnodeid != undefined) {
         sld_obj.currentnode = false;
-    }
-    if (sld_obj.currentnode == true) {
-        document.getElementsByClassName("wf-req-top-button")[0].parentNode.parentNode.id = "submitBtn";
-        $("#submitBtn").css("cssText", "display:none !important;");
     }
     var steps = sld_obj.vars.length;
     let myIntv1 = setInterval(() => {
@@ -85,6 +86,11 @@ function pageLateralSlider(sld_obj) {
             return;
         }
         clearInterval(myIntv1);
+        if (sld_obj.currentnode == true) {
+            document.getElementsByClassName("wf-req-top-button")[0].parentNode.parentNode.id = "submitBtn";
+            $(".ant-menu-vertical>.ant-menu-item:nth-of-type(1)").css("cssText", "display:none !important;");
+            $("#submitBtn").css("cssText", "display:none !important;");
+        }
         //自适应列宽            
         const screen_width = $(".wf-req-form")[0].offsetWidth;
         const padding_width = Math.floor(0.02 * screen_width);
@@ -119,6 +125,7 @@ function pageLateralSlider(sld_obj) {
         $(".step-blank").css({ "display": "none" });
         $(".nexStep").css({ "display": "inline" });
         if (sld_obj.currentnode == true) {
+            $(".ant-menu-vertical>.ant-menu-item:nth-of-type(1)").css("cssText", "display:none !important;");
             $("#submitBtn").css("cssText", "display:none !important;");
         }
         if (curStepVar > 0) {
@@ -200,6 +207,7 @@ function pageLateralSliderClick(clc_obj) {
                 $(".step-blank").css({ "display": "none" });
                 $(".nexStep").css({ "display": "inline" });
                 if (clc_obj.currentnode == true) {
+                    $(".ant-menu-vertical>.ant-menu-item:nth-of-type(1)").css("cssText", "display:none !important;");
                     $("#submitBtn").css("cssText", "display:none !important;");
                 }
             } else if (clc_obj.curStep === clc_obj.vars.length - 1) {
@@ -207,6 +215,7 @@ function pageLateralSliderClick(clc_obj) {
                 $(".step-blank").css({ "display": "none" });
                 $(".nexStep").css({ "display": "none" });
                 if (clc_obj.currentnode == true) {
+                    $(".ant-menu-vertical>.ant-menu-item:nth-of-type(1)").css("cssText", "display:list-item !important;");
                     $("#submitBtn").css("cssText", "display:inline-block !important;");
                 }
             } else {
@@ -214,6 +223,7 @@ function pageLateralSliderClick(clc_obj) {
                 $(".step-blank").css({ "display": "inline" });
                 $(".nexStep").css({ "display": "inline" });
                 if (clc_obj.currentnode == true) {
+                    $(".ant-menu-vertical>.ant-menu-item:nth-of-type(1)").css("cssText", "display:none !important;");
                     $("#submitBtn").css("cssText", "display:none !important;");
                 }
             }
@@ -259,6 +269,7 @@ function pageLateralSliderClick(clc_obj) {
                 $(".step-blank").css({ "display": "none" });
                 $(".nexStep").css({ "display": "inline" });
                 if (clc_obj.currentnode == true) {
+                    $(".ant-menu-vertical>.ant-menu-item:nth-of-type(1)").css("cssText", "display:none !important;");
                     $("#submitBtn").css("cssText", "display:none !important;");
                 }
             } else if (clc_obj.curStep === clc_obj.vars.length - 1) {
@@ -266,6 +277,7 @@ function pageLateralSliderClick(clc_obj) {
                 $(".step-blank").css({ "display": "none" });
                 $(".nexStep").css({ "display": "none" });
                 if (clc_obj.currentnode == true) {
+                    $(".ant-menu-vertical>.ant-menu-item:nth-of-type(1)").css("cssText", "display:list-item !important;");
                     $("#submitBtn").css("cssText", "display:inline-block !important;");
                 }
             } else {
@@ -273,6 +285,7 @@ function pageLateralSliderClick(clc_obj) {
                 $(".step-blank").css({ "display": "inline" });
                 $(".nexStep").css({ "display": "inline" });
                 if (clc_obj.currentnode == true) {
+                    $(".ant-menu-vertical>.ant-menu-item:nth-of-type(1)").css("cssText", "display:none !important;");
                     $("#submitBtn").css("cssText", "display:none !important;");
                 }
             }
