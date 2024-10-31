@@ -26,7 +26,10 @@ function myFilter(mainFieldIds, detFieldIds, det_id, comparators, emptyValues = 
         WfForm.controlDetailRowDisplay("detail_" + det_id, "all", false);
         return;
     }
+
     //逐行明细判断
+    let oldCheckedRows = WfForm.getDetailCheckedRowIndexStr("detail_" + det_id).split(",");
+    let newCheckedRows = [];
     det_rowIndexs.forEach(rowIndex => {
         if (all_rows.includes(rowIndex)) {
             //逐个筛选字段判断
@@ -50,8 +53,12 @@ function myFilter(mainFieldIds, detFieldIds, det_id, comparators, emptyValues = 
                 i++;
             }
             WfForm.controlDetailRowDisplay("detail_" + det_id, rowIndex + "", check_res1);
+            if (check_res1 == false && oldCheckedRows.includes(rowIndex + "")) {
+                newCheckedRows.push(rowIndex + "");
+            }
         }
     });
+    WfForm.checkDetailRow("detail_" + det_id, newCheckedRows.join(","), true);
 }
 
 function myFilterComparator(mainFV, detFV, detSeparators, index, emptyValue) {
