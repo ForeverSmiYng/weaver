@@ -1,4 +1,4 @@
-//浏览框或选择框字段的筛选功能函数
+//明细表筛选功能函数
 function myFilter(mainFieldIds, detFieldIds, det_id, comparators, emptyValues = undefined, mainFieldSeparators = undefined, detFieldSeparators = undefined, rows = undefined) {
     let all_rows_str = WfForm.getDetailAllRowIndexStr("detail_" + det_id);
     if (all_rows_str.length == 0) {
@@ -24,6 +24,7 @@ function myFilter(mainFieldIds, detFieldIds, det_id, comparators, emptyValues = 
     //如果所有主表筛选字段均为空值，即无筛选，显示所有明细行，函数结束
     if (mainFieldValues.length == 0) {
         WfForm.controlDetailRowDisplay("detail_" + det_id, "all", false);
+        WfForm.controlDetailRowDisableCheck("detail_" + det_id, "all", false);
         return;
     }
 
@@ -53,6 +54,7 @@ function myFilter(mainFieldIds, detFieldIds, det_id, comparators, emptyValues = 
                 i++;
             }
             WfForm.controlDetailRowDisplay("detail_" + det_id, rowIndex + "", check_res1);
+            WfForm.controlDetailRowDisableCheck("detail_" + det_id, rowIndex + "", check_res1);
             if (check_res1 == false && oldCheckedRows.includes(rowIndex + "")) {
                 newCheckedRows.push(rowIndex + "");
             }
