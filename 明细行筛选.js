@@ -1,4 +1,4 @@
-//明细表筛选功能函数
+// 明细表筛选功能函数
 function myFilter(mainFieldIds, detFieldIds, det_id, comparators, emptyValues = undefined, mainFieldSeparators = undefined, detFieldSeparators = undefined, rows = undefined) {
     let all_rows_str = WfForm.getDetailAllRowIndexStr("detail_" + det_id);
     if (all_rows_str.length == 0) {
@@ -15,7 +15,7 @@ function myFilter(mainFieldIds, detFieldIds, det_id, comparators, emptyValues = 
     let mainFieldValues = [];
     let new_detFieldIds = [];
     mainFieldIds.forEach((mfi, i) => {
-        let mfi_value = WfForm.getFieldValue(mfi);
+        let mfi_value = WfForm.getFieldValue(mfi).toLowerCase();
         if (mfi_value.length > 0) {
             mainFieldValues.push(mfi_value.split(mainFieldSeparators == undefined ? "," : mainFieldSeparators[i]).filter(e => e.length > 0));
             new_detFieldIds.push([detFieldIds[i], detFieldSeparators == undefined ? "," : detFieldSeparators[i], comparators[i], emptyValues == undefined ? undefined : emptyValues[i]]);
@@ -37,9 +37,9 @@ function myFilter(mainFieldIds, detFieldIds, det_id, comparators, emptyValues = 
             let check_res1 = false;
             let i = 0;
             for (const dfi of new_detFieldIds) {
-                let dfi_values = WfForm.getFieldValue(dfi[0] + "_" + rowIndex);
-                if (dfi_values.length == 0 && dfi[2] != "check框" && dfi[2] != "有无") {
-                    //如果明细行对应字段为空,匹配失败，中止循环
+                let dfi_values = WfForm.getFieldValue(dfi[0] + "_" + rowIndex).toLowerCase();
+                if (dfi_values.length == 0 && dfi[3] == undefined) {
+                    //如果明细行对应字段为空且不允许筛选空,匹配失败，中止循环
                     check_res1 = true;
                     break;
                 } else {
@@ -66,56 +66,66 @@ function myFilter(mainFieldIds, detFieldIds, det_id, comparators, emptyValues = 
 function myFilterComparator(mainFV, detFV, detSeparators, index, emptyValue) {
     switch (index) {
         case "文本":
-            for (const mfi_value of mainFV) {
-                if (detFV.includes(mfi_value)) {
+            if (detFV.length == 0) {
+                if (mainFV.includes(emptyValue)) {
                     return true;
+                }
+            } else {
+                for (const mfi_value of mainFV) {
+                    if (detFV.includes(mfi_value)) {
+                        return true;
+                    }
                 }
             }
             return false;
         case "浏览框":
-            for (const dfi_value of detFV.split(detSeparators).filter(e => e.length > 0)) {
-                if (mainFV.includes(dfi_value)) {
+            if (detFV.length == 0) {
+                if (mainFV.includes(emptyValue)) {
                     return true;
+                }
+            } else {
+                for (const dfi_value of detFV.split(detSeparators).filter(e => e.length > 0)) {
+                    if (mainFV.includes(dfi_value)) {
+                        return true;
+                    }
                 }
             }
             return false;
         case "选择框":
-            for (const dfi_value of detFV.split(detSeparators).filter(e => e.length > 0)) {
-                if (mainFV.includes(dfi_value)) {
+            if (detFV.length == 0) {
+                if (mainFV.includes(emptyValue)) {
                     return true;
                 }
-            }
-            return false;
-        case "有无":
-            if (["0", "1", 0, 1].includes(emptyValue)) {
-                if (detFV.length == 0) {
-                    if (mainFV.includes(emptyValue + "")) {
-                        return true;
-                    }
-                } else {
-                    if (mainFV.includes(emptyValue + "" == "1" ? "0" : "1")) {
+            } else {
+                for (const dfi_value of detFV.split(detSeparators).filter(e => e.length > 0)) {
+                    if (mainFV.includes(dfi_value)) {
                         return true;
                     }
                 }
             }
             return false;
         case "check框":
-            if (["0", "1", 0, 1].includes(emptyValue)) {
-                if (detFV == 0 || detFV.length == 0) {
-                    if (mainFV.includes(emptyValue + "")) {
-                        return true;
-                    }
-                } else {
-                    if (mainFV.includes(emptyValue + "" == "1" ? "0" : "1")) {
-                        return true;
-                    }
+            let emp = mainFV.includes(emptyValue) ? 1 : 0;
+            if (detFV.length == 0 || detFV == "0") {
+                if (emp == 1) {
+                    return true;
+                }
+            } else {
+                if (mainFV.length > emp) {
+                    return true;
                 }
             }
             return false;
         default:
-            for (const mfi_value of mainFV) {
-                if (detFV.includes(mfi_value)) {
+            if (detFV.length == 0) {
+                if (mainFV.includes(emptyValue)) {
                     return true;
+                }
+            } else {
+                for (const mfi_value of mainFV) {
+                    if (detFV.includes(mfi_value)) {
+                        return true;
+                    }
                 }
             }
             return false;
